@@ -1,0 +1,146 @@
+#define rs  PORTB0
+#define rw  PORTB1
+#define en  PORTB2
+
+//functions for 4 bit mode operation:
+void lcd_4_cmd(unsigned char cmd);
+void lcd_4_data(unsigned char data);
+void write_display_4bit(char *str);
+void lcd_init_4bit();
+
+//function to send command to lcd
+void lcd_cmd(unsigned char cmd)
+{
+PORTD=cmd;
+PORTB&=~(1<< rs);
+PORTB&=~(1<< rw);
+PORTB|=(1<< en);
+delay(20);
+PORTB&=~(1<< en);
+}
+
+//function t0 send data character by charater to lcd
+void lcd_data(unsigned char data)
+{
+PORTD=data;
+PORTB|=(1<< rs);
+PORTB&=~(1<< rw);
+PORTB|=(1<< en);
+delay(20);
+PORTB&=~(1<< en);
+}
+
+// function to send print string on lcd
+void write_display(char *str)
+{
+  while(*str != '\0')
+  {
+    lcd_data(*str);
+    str++;
+    delay(200);
+  }
+
+}
+
+//function to initialize display 
+void lcd_init()
+{
+    lcd_cmd(0x38);   // initialize 8 bit mode
+    lcd_cmd(0x0E);   // Display on cusrsor off
+    lcd_cmd(0x80);   // force cursor to start from row-0 col-0
+    lcd_cmd(0x01);   //clear display 
+}
+
+   /*
+   if using in atmel studio replce the void setup with 
+   #define F_CPU 8000000UL
+   #include <avr/io.h>
+   #include <util/delay.h>
+    int main(){
+               return 0;
+               }
+*/
+void setup() {
+  
+                DDRD=0xff;
+                DDRB=0xff;
+ 
+  
+
+              }
+void loop() {
+                lcd_init();
+
+    while(1)
+                {
+    
+                  write_display("obaid qureshi");
+                   lcd_cmd(0xc0); 
+                  write_display("ESP SAFETY ");
+                  lcd_cmd(0x01);
+                 }
+             }
+
+
+
+
+
+// command for 4 bit mode of display
+
+void lcd_4_cmd(unsigned char cmd)
+{
+ PORTD=(PORTD & 0x0f)|(cmd & 0xf0);
+ PORTB&=~(1<< rs);
+ PORTB&=~(1<< rw);
+ PORTB|=(1<< en);
+ delay(20);
+ PORTB&=~(1<< en);
+
+PORTD=(PORTD & 0x0f)|(cmd <<4);
+PORTB|=(1<< en);
+ delay(20);
+ PORTB&=~(1<< en);
+}
+
+
+//function for 4 bit data mode
+
+void lcd_4_data(unsigned char data)
+{
+ PORTD=(PORTD & 0x0f)|(data & 0xf0);
+ PORTB|=(1<< rs);
+ PORTB&=~(1<< rw);
+ PORTB|=(1<< en);
+ delay(20);
+ PORTB&=~(1<< en);
+
+PORTD=(PORTD & 0x0f)|(data <<4);
+PORTB|=(1<< en);
+ delay(20);
+ PORTB&=~(1<< en);
+}
+
+
+// function to send print string on lcd
+void write_display_4bit(char *str)
+{
+  while(*str != '\0')
+  {
+    lcd_4_data(*str);
+    str++;
+    delay(200);
+  }
+
+}
+
+//function to initialize display 
+void lcd_init_4bit()
+{
+    lcd_4_cmd(0x28);
+    lcd_4_cmd(0x0E);
+    lcd_4_cmd(0x80);
+    lcd_4_cmd(0x01);
+
+}
+
+//function for key interfaing 4x4:
