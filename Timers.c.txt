@@ -1,0 +1,63 @@
+
+void timer0_init();
+
+void setup() {
+  // put your setup code here, to run once:
+DDRB=0xff;
+timer0_init();
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+while(1)
+{
+
+
+}
+}
+// this block of code for timer operation in different mode operation
+ 
+int count=0;
+void timer0_init()
+{
+//mode of timer operation and prescaler
+
+//normal mode with no prescaler 256
+TCCR0=(1<<CS02);
+
+
+// initialize timer counter to
+TCNT0=0;
+
+//enable timer0 overflow interrup
+TIMSK|=(1<<TOIE0); //Enalbe overflow interrup
+sei();             //Enalbe global interrupt
+
+
+}
+
+
+
+ISR(TIMER0_OVF_vect)
+{
+
+if(TIFR==1)
+{
+if(++count==64)
+{
+//perform operation code
+PORTB=^(1<<PORTB);
+count=0;
+}
+}
+
+
+
+TIFR0=0X00;
+}
+
+
+
+
+
+
