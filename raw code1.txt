@@ -136,11 +136,11 @@ unsigned char scan_key()
        PORTD&=~(1<<ROW4);
        PORTD|=(1<<ROW1)|(1<<ROW2)|(1<<ROW3);
        if(!(PIND &(1<< COL1)))
-       return *;
+       return '*';
        else if(!(PIND &(1<< COL2)))
        return 0;
        else if(!(PIND &(1<< COL3)))
-       return #;
+       return '#';
        else if(!(PIND &(1<< COL4)))
        return 'D';
 }
